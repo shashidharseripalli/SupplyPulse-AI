@@ -91,3 +91,24 @@ Use FastAPI as the backend API server and Streamlit as the standalone dashboard.
 - API can be used independently by external systems.
 - Dashboard is decoupled and can be replaced or extended.
 - Two processes to run, but Docker Compose handles orchestration.
+
+---
+
+## ADR-006: Demand Forecasting Architecture (Module 1)
+
+**Status:** Accepted  
+**Date:** 2026-11-14
+
+**Context:**  
+Demand forecasting in supply chains requires both simple, resilient statistical benchmarks (to handle cold-start and seasonal rhythms) and machine learning models capable of capturing non-linear feature interactions without lookahead bias.
+
+**Decision:**  
+1. Adopt a tri-model architecture: `SeasonalNaiveForecaster` (7-day/30-day baseline), `XGBDemandForecaster`, and `LGBMDemandForecaster`.
+2. Enforce strict temporal separation in feature engineering (`DemandFeaturePipeline`): lag offsets $\ge 1$ and rolling window calculations applied exclusively to target values shifted by 1 period.
+3. Enforce the physical inventory invariant of non-negative demand ($y \ge 0$) at inference across all forecasters.
+4. Complement MAE and RMSE with WAPE (Weighted Absolute Percentage Error) as the primary supply chain metric, avoiding division explosions on intermittent zero-demand periods.
+
+**Consequences:**  
+- Robust benchmark comparison against classical naive projection.
+- Zero feature leakage into future horizon periods.
+- High training throughput on multi-core CPU configurations without GPU requirements.

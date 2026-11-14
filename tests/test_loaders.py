@@ -2,6 +2,7 @@
 import pytest
 import pandas as pd
 from pathlib import Path
+from src.common.exceptions import DataError
 from src.ingestion.loaders import load_csv
 
 
@@ -15,6 +16,6 @@ class TestCSVLoader:
         assert df.shape == (20, 2)
 
     def test_load_csv_missing_file_raises(self) -> None:
-        """load_csv should raise FileNotFoundError for missing files."""
-        with pytest.raises(FileNotFoundError):
+        """load_csv should raise DataError when the file does not exist."""
+        with pytest.raises(DataError):
             load_csv("nonexistent/data.csv")
