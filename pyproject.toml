@@ -1,0 +1,14 @@
+[project]
+name = "supplypulse-ai"
+version = "0.1.0"
+description = "Event-Aware Predictive Logistics and Supply Chain Resilience Platform"
+requires-python = ">=3.10"
+license = "MIT"
+
+[tool.black]
+line-length = 88
+target-version = ["py310"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"

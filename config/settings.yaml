@@ -1,0 +1,71 @@
+# SupplyPulse AI — Master Configuration
+# Override via environment variables or .env file
+
+project:
+  name: "SupplyPulse AI"
+  version: "0.1.0"
+  environment: "development"
+
+database:
+  url: "${DATABASE_URL:postgresql://user:password@localhost:5432/supplypulse}"
+  pool_size: 5
+  echo: false
+
+data:
+  raw_dir: "data/raw"
+  interim_dir: "data/interim"
+  processed_dir: "data/processed"
+  models_dir: "models"
+
+mlflow:
+  tracking_uri: "${MLFLOW_TRACKING_URI:./mlruns}"
+  experiment_name: "supplypulse-default"
+
+forecasting:
+  horizon: 30
+  test_split_ratio: 0.2
+  seasonal_period: 7
+  xgboost:
+    n_estimators: 200
+    max_depth: 6
+    learning_rate: 0.1
+    early_stopping_rounds: 10
+  lightgbm:
+    n_estimators: 200
+    max_depth: -1
+    learning_rate: 0.1
+    num_leaves: 31
+
+nlp:
+  model_name: "distilbert-base-uncased"
+  max_length: 256
+  batch_size: 16
+  ner_model: "en_core_web_sm"
+
+risk:
+  contamination: 0.05
+  threshold: 0.5
+
+optimization:
+  time_limit_seconds: 30
+  solver: "SCIP"
+
+simulation:
+  num_scenarios: 100
+  random_seed: 42
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: true
+  cors_origins:
+    - "http://localhost:8501"
+    - "http://localhost:3000"
+
+dashboard:
+  port: 8501
+  theme: "light"
+
+logging:
+  level: "INFO"
+  format: "%(asctime)s | %(name)s | %(levelname)s | %(message)s"
